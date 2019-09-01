@@ -2,7 +2,7 @@
 
 /*
 Plugin Name: Shadertoy Gallery
-Plugin URI: https://reindernijhoff.net/shadertoy/
+Plugin URI: https://github.com/reindernijhoff/wp-shadertoy-gallery
 Description: Creates and update a gallery with Shadertoy shaders based on a query.
 Version: 0.1
 Author: Reinder Nijhoff
