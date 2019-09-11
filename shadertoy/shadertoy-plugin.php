@@ -117,8 +117,8 @@ function shadertoy_list_demo($atts) {
 
 function shadertoy_layout_shader($info, $hideusername) {
 	$html = '<li class="blocks-gallery-item"><figure>';
-	$html .= '<a href="https://shadertoy.com/view/' . $info['id'] . '">';
-	$html .= '<img src="https://reindernijhoff.net/shadertoythumbs/' . $info['id'] . '.jpg" style="width:100%" alt="' . htmlentities($info['description']) . '">';
+	$html .= '<a href="https://shadertoy.com/view/' . $info['id'] . '" title="' . htmlentities($info['name'] . ' by ' . $info['username']) . "\n\n" . htmlentities($info['description']) .'">';
+	$html .= '<img src="https://reindernijhoff.net/shadertoythumbs/' . $info['id'] . '.jpg" style="width:100%" alt="' . htmlentities($info['name'] . ' by ' . $info['username']) . '">';
 	$html .= '<figcaption>' . $info['name'] . (!$hideusername?'<br/>by ' . $info['username']:'') . '</figcaption>';
 	$html .= '</a>';
 	$html .= '</figure></li>';
