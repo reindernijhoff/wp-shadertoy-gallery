@@ -21,7 +21,7 @@ function shadertoy_install() {
 
 	$sql = "CREATE TABLE $table_name (
 		id varchar(255) NOT NULL,
-  		requested datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  		expires datetime NOT NULL,
   		data mediumtext NOT NULL,
 		PRIMARY KEY (id)
 	) $charset_collate;";
@@ -48,25 +48,26 @@ function shadertoy_cleanup_json($json_string) {
 	return preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $json_string);
 }
 
-function shadertoy_do_query($key, $query, $sort = '', $timeout = 60*60*24*21) {
+function shadertoy_do_query($key, $query, $sort = '', $timeout = 60*60*24*14) {
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'shadertoy';
 
-	$timeout += intval(rand(0, 60*60*2)); // prevent that all cached items get invalid at the same time
+	$timeout += intval(rand(0, $timeout)); // prevent that all cached items get invalid at the same time
 
 	$json = '';
 
 	$dbkey = $query . ($sort ? '-' . $sort : '');
 
-	$cached = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %s AND requested > NOW() - %d", $dbkey, $timeout) );
+	$cached = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %s AND expires > NOW()", $dbkey) );
 	if ($cached) {
 		$json = $cached->data;
 	} else {
 		$url = 'https://www.shadertoy.com/api/v1/shaders/' . $query . '?key=' . $key . ($sort ? '&sort=' . $sort : '');
 		$json = shadertoy_cleanup_json(shadertoy_curl_get_contents($url));
 
-		$wpdb->replace( $table_name, array( 'id' => $dbkey, 'data' => $json ), array( '%s', '%s' ) );
-		sleep(0.25); // don't DOS shadertoy!
+		$wpdb->query( $wpdb->prepare( "REPLACE INTO $table_name( id, data, expires ) VALUES ( %s, %s, NOW() + INTERVAL %d SECOND )", $dbkey, $json, $timeout ) );
+
+		sleep(0.125); // don't DOS shadertoy!
 	}
 
 	$obj = json_decode($json, true);
@@ -79,7 +80,8 @@ function shadertoy_list_demo($atts) {
 		'key' => false,
 		'query' => '',
 		'sort' => 'newest',
-		'columns' => 2
+		'columns' => 2,
+		'hideusername' => 0
 	), $atts );
 
 	if (!$a['key']) {
@@ -100,10 +102,10 @@ function shadertoy_list_demo($atts) {
 		$info = $shaderdata['Shader']['info'];
 
 		if (!$username || $username == $info['username']) {
-			$html .= shadertoy_layout_shader($info);
+			$html .= shadertoy_layout_shader($info, $a['hideusername']);
 		}
 
-		if (microtime(true) - $start > 60) {
+		if (microtime(true) - $start > 15) {
 			break;
 		}
 	}
@@ -113,11 +115,11 @@ function shadertoy_list_demo($atts) {
     return $html;
 }
 
-function shadertoy_layout_shader($info) {
+function shadertoy_layout_shader($info, $hideusername) {
 	$html = '<li class="blocks-gallery-item"><figure>';
 	$html .= '<a href="https://shadertoy.com/view/' . $info['id'] . '">';
 	$html .= '<img src="https://reindernijhoff.net/shadertoythumbs/' . $info['id'] . '.jpg" style="width:100%" alt="' . htmlentities($info['description']) . '">';
-	$html .= '<figcaption>' . $info['name'] . '</figcaption>';
+	$html .= '<figcaption>' . $info['name'] . (!$hideusername?'<br/>by ' . $info['username']:'') . '</figcaption>';
 	$html .= '</a>';
 	$html .= '</figure></li>';
 

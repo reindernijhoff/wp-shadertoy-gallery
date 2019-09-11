@@ -9,7 +9,7 @@ Note:
 - You *need* a Shadertoy API key for this plugin. You can request a key [here](https://www.shadertoy.com/howto).
 - The plugin can only find and display shaders that are published on Shadertoy using the _API+Public_ option.
 
-I don't want to DOS Shadertoy and I want a fast plugin. Therefore, a lot of results are cached: the result of a query will be cached for (at least) one day; the title of an individual shader for (at least) 21 days. Expect a (extremely) long page load the first time you open the Gallery. A second time (most) will be cached and you should have a fast response.
+I don't want to DOS Shadertoy and I want a fast plugin. Therefore, a lot of results are cached: the result of a query will be cached for (at least) one day; the title of an individual shader for (at least) 14 days. Expect a (extremely) long page load the first time you open the Gallery. A second time (most) will be cached and you should have a fast response.
 
 ## Installation
 
