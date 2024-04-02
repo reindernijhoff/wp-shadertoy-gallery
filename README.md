@@ -1,15 +1,15 @@
 # Wordpress Shadertoy Gallery Plugin
 
-This Wordpress plugin enables a shortcode that can be used to add a gallery with [Shadertoy](https://www.shadertoy.com) shaders to your Worpress site. The content of the gallery is based on a _query_ attribute of the shortcode. The content of the gallery will update automatically.
+This WordPress plugin enables a shortcode that can be used to add a gallery with [Shadertoy](https://www.shadertoy.com) shaders to your WordPress site. The content of the gallery is based on a _query_ attribute of the shortcode. The content of the gallery will update automatically.
 
 You can find a live demo of this plugin [here](https://reindernijhoff.net/shadertoy/).
 
 Note:
-- This is the first Wordpress plugin I have ever made. 
+- This is the first WordPress plugin I have ever made. 
 - You *need* a Shadertoy API key for this plugin. You can request a key [here](https://www.shadertoy.com/howto).
-- The plugin can only find and display shaders that are published on Shadertoy using the _API+Public_ option.
+- The plugin can only find and display shaders published on Shadertoy using the _API+Public_ option.
 
-I don't want to DDoS Shadertoy and I want a fast plugin. Therefore, a lot of results are cached: the result of a query will be cached for (at least) one day; the title of an individual shader for (at least) 14 days. Expect a (extremely) long page load the first time you open the Gallery. A second time (most) will be cached and you should have a fast response.
+I don't want to DDoS Shadertoy, and I want a fast plugin. Therefore, many results are cached: the result of a query will be cached for (at least) one day, the title of an individual shader for (at least) 14 days. Expect a (extremely) long page load the first time you open the Gallery. A second time (most) will be cached, and you should respond quickly.
 
 ## Installation
 
